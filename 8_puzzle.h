@@ -1,23 +1,25 @@
+#include <vector>
+
 using namespace std;
 
-struct node
-{
-	list<node> children;
-	node *parent;
-	int new_board[9];
-	int x;
-	node(int old_board[9])
-	:  parent(0), x(0)
-	{
-		for(int i = 0; i < 9; i++)
-		{
-			new_board[i] = old_board[i];
-		}
-	}
-};
+// struct node
+// {
+// 	int new_board[9];
+// 	node(int board[9])
+// 	{
+// 		for(int i = 0; i < 9; i++)
+// 		{
+// 			new_board[i] = board[i];
+// 		}
+// 	}
+// };
 
 class boardLibrary
 {
+	private:
+		int parent[9];
+		//list<node> children;
+
 	public:
 		boardLibrary();
 		void moveUp(int x, int parent[9]);

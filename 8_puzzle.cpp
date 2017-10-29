@@ -53,37 +53,60 @@ void boardLibrary::duplicateBoard(int destBoard[puzzle_size], int origBoard[puzz
 	}
 }
 
-void boardLibrary::moveRight(int x, int parent[puzzle_size])
+void boardLibrary::moveRight(int x, int root[puzzle_size])
 {
 	boardLibrary tempObj;
 	if(x % columns < columns - 1)
 	{
 		int childBoard[puzzle_size];
+		tempObj.duplicateBoard(childBoard, root);
+		swap(childBoard[x + 1], childBoard[x]);	//perform swap operation on board
+		cout << "shifted vector:" << endl;
+		tempObj.outputVector(childBoard);	//does check to output new shifted vector
+		tempObj.duplicateBoard(parent, root);	//copies the parent to the parent variable
+		
+		cout << "display parent: " << endl;
 		tempObj.outputVector(parent);
-		cout << "before swap : " << endl;
-		tempObj.duplicateBoard(childBoard, parent);
-		tempObj.outputVector(childBoard);
-		cout << "after swap:  " << endl;
-		swap(childBoard[x + 1], childBoard[x]);
-		tempObj.outputVector(childBoard);
 
-		node *temp = new node(childBoard);
+
 	}
 }
 
-void boardLibrary::moveLeft(int x, int parent[puzzle_size])
+void boardLibrary::moveLeft(int x, int root[puzzle_size])
 {
+	boardLibrary tempObj;
+	if(x % columns > 0)
+	{
+		int childBoard[puzzle_size];
+		tempObj.duplicateBoard(childBoard, root);
+		swap(childBoard[x - 1], childBoard[x]);
+		tempObj.duplicateBoard(parent, root);
 
+	}
 }
 
-void boardLibrary::moveUp(int x, int parent[puzzle_size])
+void boardLibrary::moveUp(int x, int root[puzzle_size])
 {
-
+	boardLibrary tempObj;
+	if(x - columns >= 0)
+	{
+		int childBoard[puzzle_size];
+		tempObj.duplicateBoard(childBoard, root);
+		swap(childBoard[i - 3], childBoard[i]);
+		tempObj.duplicateBoard(parent, root);
+	}
 }
 
-void boardLibrary::moveDown(int x, int parent[puzzle_size])
+void boardLibrary::moveDown(int x, int root[puzzle_size])
 {
-
+	boardLibrary tempObj;
+	if(x + columns < puzzle_size)
+	{
+		int childBoard[puzzle_size];
+		tempObj.duplicateBoard(childBoard, root);
+		swap(childBoard[x + 3], childBoard[x]);
+		tempObj.duplicateBoard(parent, root);
+	}
 }
 
 
@@ -114,6 +137,7 @@ int main()
 
 	boardLibrary object;
 	object.outputVector(puzzle);
-	object.findZero(puzzle);
+	cout << "output second puzzle " << endl;
+	//object.findZero(puzzle);
 	object.moveRight(4, puzzle);
 }
