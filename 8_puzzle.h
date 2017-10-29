@@ -2,24 +2,13 @@
 
 using namespace std;
 
-// struct node
-// {
-// 	int new_board[9];
-// 	node(int board[9])
-// 	{
-// 		for(int i = 0; i < 9; i++)
-// 		{
-// 			new_board[i] = board[i];
-// 		}
-// 	}
-// };
 
 class boardLibrary
 {
 	private:
 		int parent[9];
 		list<boardLibrary> children;
-		
+
 	public:
 		boardLibrary();
 		void moveUp(int x, int parent[9]);
