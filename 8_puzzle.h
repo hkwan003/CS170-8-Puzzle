@@ -18,8 +18,8 @@ class boardLibrary
 {
 	private:
 		int parent[9];
-		//list<node> children;
-
+		list<boardLibrary> children;
+		
 	public:
 		boardLibrary();
 		void moveUp(int x, int parent[9]);

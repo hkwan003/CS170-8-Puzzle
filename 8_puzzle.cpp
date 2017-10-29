@@ -61,12 +61,11 @@ void boardLibrary::moveRight(int x, int root[puzzle_size])
 		int childBoard[puzzle_size];
 		tempObj.duplicateBoard(childBoard, root);
 		swap(childBoard[x + 1], childBoard[x]);	//perform swap operation on board
-		cout << "shifted vector:" << endl;
-		tempObj.outputVector(childBoard);	//does check to output new shifted vector
 		tempObj.duplicateBoard(parent, root);	//copies the parent to the parent variable
-		
-		cout << "display parent: " << endl;
-		tempObj.outputVector(parent);
+
+		boardLibrary ChildrenBoard;		//create object from class boardLibrary
+		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
+		children.push_back(ChildrenBoard); //pushes back the new object with board into list
 
 
 	}
@@ -82,6 +81,9 @@ void boardLibrary::moveLeft(int x, int root[puzzle_size])
 		swap(childBoard[x - 1], childBoard[x]);
 		tempObj.duplicateBoard(parent, root);
 
+		boardLibrary ChildrenBoard;		//create object from class boardLibrary
+		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
+		children.push_back(ChildrenBoard); //pushes back the new object with board into list
 	}
 }
 
@@ -92,8 +94,12 @@ void boardLibrary::moveUp(int x, int root[puzzle_size])
 	{
 		int childBoard[puzzle_size];
 		tempObj.duplicateBoard(childBoard, root);
-		swap(childBoard[i - 3], childBoard[i]);
+		swap(childBoard[x - 3], childBoard[x]);
 		tempObj.duplicateBoard(parent, root);
+
+		boardLibrary ChildrenBoard;		//create object from class boardLibrary
+		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
+		children.push_back(ChildrenBoard); //pushes back the new object with board into list
 	}
 }
 
@@ -106,6 +112,10 @@ void boardLibrary::moveDown(int x, int root[puzzle_size])
 		tempObj.duplicateBoard(childBoard, root);
 		swap(childBoard[x + 3], childBoard[x]);
 		tempObj.duplicateBoard(parent, root);
+
+		boardLibrary ChildrenBoard;		//create object from class boardLibrary
+		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
+		children.push_back(ChildrenBoard); //pushes back the new object with board into list
 	}
 }
 
