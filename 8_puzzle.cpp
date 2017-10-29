@@ -11,7 +11,12 @@ const int columns = 3;
 const int rows = 3;
 
 boardLibrary::boardLibrary()
-{}
+{
+	for (int i = 0; i < puzzle_size; i++)
+	{
+		parent[i] = 0;			//initalizes the default to zero array by default
+	}
+}
 
 void boardLibrary::outputVector(int arr[puzzle_size])
 {
@@ -22,15 +27,17 @@ void boardLibrary::outputVector(int arr[puzzle_size])
 	cout << endl;
 }
 
-void boardLibrary::findZero(int arr[puzzle_size])
+int boardLibrary::findZero(int arr[puzzle_size])
 {
 	for (int i = 0; i < puzzle_size; i++)
 	{
 		if(arr[i] == 0)
 		{
-			cout << "position of zero is at: " << i << endl;
+			return i;
 		}
 	}
+	cout << "There is no zero on this puzzle board" << endl;
+	return -1;
 }
 
 bool boardLibrary::goalCheck(int arr[puzzle_size])
@@ -65,7 +72,7 @@ void boardLibrary::moveRight(int x, int root[puzzle_size])
 
 		boardLibrary ChildrenBoard;		//create object from class boardLibrary
 		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
-		children.push_back(ChildrenBoard); //pushes back the new object with board into list
+		tempObj.children.push_back(ChildrenBoard); //pushes back the new object with board into list
 
 
 	}
@@ -83,7 +90,7 @@ void boardLibrary::moveLeft(int x, int root[puzzle_size])
 
 		boardLibrary ChildrenBoard;		//create object from class boardLibrary
 		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
-		children.push_back(ChildrenBoard); //pushes back the new object with board into list
+		tempObj.children.push_back(ChildrenBoard); //pushes back the new object with board into list
 	}
 }
 
@@ -99,7 +106,7 @@ void boardLibrary::moveUp(int x, int root[puzzle_size])
 
 		boardLibrary ChildrenBoard;		//create object from class boardLibrary
 		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
-		children.push_back(ChildrenBoard); //pushes back the new object with board into list
+		tempObj.children.push_back(ChildrenBoard); //pushes back the new object with board into list
 	}
 }
 
@@ -115,10 +122,20 @@ void boardLibrary::moveDown(int x, int root[puzzle_size])
 
 		boardLibrary ChildrenBoard;		//create object from class boardLibrary
 		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
-		children.push_back(ChildrenBoard); //pushes back the new object with board into list
+		tempObj.children.push_back(ChildrenBoard); //pushes back the new object with board into list
 	}
 }
 
+void boardLibrary::expansion(int arr[puzzle_size])
+{
+	boardLibrary helperObj;
+	int zeroPos = helperObj.findZero(arr);
+
+	moveRight(zeroPos, arr);
+	moveLeft(zeroPos, arr);
+	moveUp(zeroPos, arr);
+	moveDown(zeroPos, arr);
+}
 
 int main()
 {

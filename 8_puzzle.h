@@ -15,8 +15,9 @@ class boardLibrary
 		void moveDown(int x, int parent[9]);
 		void moveLeft(int x, int parent[9]);
 		void moveRight(int x, int parent[9]);
-		void findZero(int board[9]);
+		int findZero(int board[9]);
 		void outputVector(int board[9]);
 		bool goalCheck(int board[9]);
 		void duplicateBoard(int destBoard[9], int origBoard[9]);
+		void expansion(int parent[9]);
 };
