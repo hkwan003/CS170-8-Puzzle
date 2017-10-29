@@ -13,7 +13,7 @@ const int rows = 3;
 boardLibrary::boardLibrary()
 {}
 
-void boardLibrary::outputVector(int arr[9])
+void boardLibrary::outputVector(int arr[puzzle_size])
 {
 	for (int i = 0; i < 9; i++)
 	{
@@ -22,7 +22,7 @@ void boardLibrary::outputVector(int arr[9])
 	cout << endl;
 }
 
-void boardLibrary::findZero(int arr[9])
+void boardLibrary::findZero(int arr[puzzle_size])
 {
 	for (int i = 0; i < puzzle_size; i++)
 	{
@@ -33,6 +33,58 @@ void boardLibrary::findZero(int arr[9])
 	}
 }
 
+bool boardLibrary::goalCheck(int arr[puzzle_size])
+{
+	if (arr[0] == 0 && arr[1] == 1 && arr[2] == 2 && arr[3] == 3 && arr[4] == 4&& arr[5] == 5 && arr[6] == 6 && arr[7] == 7 && arr[8] == 8 &&  arr[9] == 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void boardLibrary::duplicateBoard(int destBoard[puzzle_size], int origBoard[puzzle_size])
+{
+	for (int i = 0; i < puzzle_size; i++)
+	{
+		destBoard[i] = origBoard[i];
+	}
+}
+
+void boardLibrary::moveRight(int x, int parent[puzzle_size])
+{
+	boardLibrary tempObj;
+	if(x % columns < columns - 1)
+	{
+		int childBoard[puzzle_size];
+		tempObj.outputVector(parent);
+		cout << "before swap : " << endl;
+		tempObj.duplicateBoard(childBoard, parent);
+		tempObj.outputVector(childBoard);
+		cout << "after swap:  " << endl;
+		swap(childBoard[x + 1], childBoard[x]);
+		tempObj.outputVector(childBoard);
+
+		node *temp = new node(childBoard);
+	}
+}
+
+void boardLibrary::moveLeft(int x, int parent[puzzle_size])
+{
+
+}
+
+void boardLibrary::moveUp(int x, int parent[puzzle_size])
+{
+
+}
+
+void boardLibrary::moveDown(int x, int parent[puzzle_size])
+{
+
+}
 
 
 int main()
@@ -63,51 +115,5 @@ int main()
 	boardLibrary object;
 	object.outputVector(puzzle);
 	object.findZero(puzzle);
+	object.moveRight(4, puzzle);
 }
-
-//class puzzle
-// {
-// 	struct Node {
-// 		list<Node> children;
-// 		Node *parent;
-// 		int *board_setup = new int[9];
-// 		int x = 0;
-// 	};
-
-// 	bool puzzleGoal(int test[9])
-// 	{
-// 		int start_value = test[0];
-// 		for(int i = 1; i < puzzle_size - 1; i++)
-// 		{
-// 			if(start_value > test[i])
-// 			{
-// 				return false;
-// 			}
-// 			else
-// 			{
-// 				start_value = test[i];
-// 			}
-// 		}
-// 		return true;
-// 	}
-
-// 	void moveRight(int temp[9], int i)
-// 	{
-// 		if(i % columns < columns - 1)
-// 		{
-			
-// 		}
-// 	}
-// 	void moveLeft(int temp[9], int i)
-// 	{
-		
-// 	}
-// 	void moveUp(int temp[9], int i)
-// 	{
-		
-// 	}
-// 	void moveDown(int temp[9], int i)
-// 	{
-		
-// 	}
-// };
