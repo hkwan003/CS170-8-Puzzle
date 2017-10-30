@@ -6,9 +6,9 @@
 
 using namespace std;
 
-const int puzzle_size = 9;
 const int columns = 3;
 const int rows = 3;
+int zero, one, two, three, four, five, six, seven, eight, nine;
 
 boardLibrary::boardLibrary()
 {
@@ -17,21 +17,17 @@ boardLibrary::boardLibrary()
 		parent[i] = 0;			//initalizes the default to zero array by default
 	}
 }
-
-void boardLibrary::outputVector(int arr[puzzle_size])
+void boardLibrary::outputVector()
 {
-	for (int i = 0; i < 9; i++)
-	{
-		cout << arr[i] << " ";
-	}
-	cout << endl;
+	cout << this->parent[0] << " " << this->parent[1] << " " << this->parent[2] << endl;
+	cout << this->parent[3] << " " << this->parent[4] << " " << this->parent[5] << endl;
+	cout << this->parent[6] << " " << this->parent[7] << " " << this->parent[8] << endl;
 }
-
-int boardLibrary::findZero(int arr[puzzle_size])
+int boardLibrary::findZero()
 {
 	for (int i = 0; i < puzzle_size; i++)
 	{
-		if(arr[i] == 0)
+		if(this->parent[i] == 0)
 		{
 			return i;
 		}
@@ -39,10 +35,9 @@ int boardLibrary::findZero(int arr[puzzle_size])
 	cout << "There is no zero on this puzzle board" << endl;
 	return -1;
 }
-
-bool boardLibrary::goalCheck(int arr[puzzle_size])
+bool boardLibrary::goalCheck()
 {
-	if (arr[0] == 0 && arr[1] == 1 && arr[2] == 2 && arr[3] == 3 && arr[4] == 4&& arr[5] == 5 && arr[6] == 6 && arr[7] == 7 && arr[8] == 8 &&  arr[9] == 0)
+	if (this->parent[0] == 1 && this->parent[1] == 2 && this->parent[2] == 3 && this->parent[3] == 4 && this->parent[4] == 5 && this->parent[5] == 6 && this->parent[6] == 7 && this->parent[7] == 8 && this->parent[8] == 0)
 	{
 		return true;
 	}
@@ -51,7 +46,6 @@ bool boardLibrary::goalCheck(int arr[puzzle_size])
 		return false;
 	}
 }
-
 void boardLibrary::duplicateBoard(int destBoard[puzzle_size], int origBoard[puzzle_size])
 {
 	for (int i = 0; i < puzzle_size; i++)
@@ -59,112 +53,230 @@ void boardLibrary::duplicateBoard(int destBoard[puzzle_size], int origBoard[puzz
 		destBoard[i] = origBoard[i];
 	}
 }
-
-void boardLibrary::moveRight(int x, int root[puzzle_size])
+void boardLibrary::moveRight(int x, boardLibrary root)
 {
-	boardLibrary tempObj;
 	if(x % columns < columns - 1)
 	{
-		int childBoard[puzzle_size];
-		tempObj.duplicateBoard(childBoard, root);
-		swap(childBoard[x + 1], childBoard[x]);	//perform swap operation on board
-		tempObj.duplicateBoard(parent, root);	//copies the parent to the parent variable
-
-		boardLibrary ChildrenBoard;		//create object from class boardLibrary
-		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
-		tempObj.children.push_back(ChildrenBoard); //pushes back the new object with board into list
-
+		boardLibrary childrenNode;
+		duplicateBoard(childrenNode.parent, root.parent);
+		cout << "move right" << endl;
+		//outputVector();
+		swap(childrenNode.parent[x + 1], childrenNode.parent[x]);	//perform swap operation on board
+		childrenNode.predessor.push_back(root);
+		children.push_back(childrenNode);
+		childrenNode.outputVector();
 
 	}
 }
-
-void boardLibrary::moveLeft(int x, int root[puzzle_size])
+void boardLibrary::moveLeft(int x, boardLibrary root)
 {
-	boardLibrary tempObj;
 	if(x % columns > 0)
 	{
-		int childBoard[puzzle_size];
-		tempObj.duplicateBoard(childBoard, root);
-		swap(childBoard[x - 1], childBoard[x]);
-		tempObj.duplicateBoard(parent, root);
-
-		boardLibrary ChildrenBoard;		//create object from class boardLibrary
-		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
-		tempObj.children.push_back(ChildrenBoard); //pushes back the new object with board into list
+		boardLibrary childrenNode;
+		duplicateBoard(childrenNode.parent, root.parent);
+		cout << "move left" << endl;
+		//outputVector();
+		swap(childrenNode.parent[x - 1], childrenNode.parent[x]);
+		childrenNode.predessor.push_back(root);
+		children.push_back(childrenNode);
+		childrenNode.outputVector();
 	}
 }
-
-void boardLibrary::moveUp(int x, int root[puzzle_size])
+void boardLibrary::moveUp(int x, boardLibrary root)
 {
-	boardLibrary tempObj;
 	if(x - columns >= 0)
 	{
-		int childBoard[puzzle_size];
-		tempObj.duplicateBoard(childBoard, root);
-		swap(childBoard[x - 3], childBoard[x]);
-		tempObj.duplicateBoard(parent, root);
-
-		boardLibrary ChildrenBoard;		//create object from class boardLibrary
-		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
-		tempObj.children.push_back(ChildrenBoard); //pushes back the new object with board into list
+		boardLibrary childrenNode;
+		duplicateBoard(childrenNode.parent, root.parent);
+		cout << "move up" << endl;
+		//outputVector();
+		swap(childrenNode.parent[x - 3], childrenNode.parent[x]);
+		childrenNode.predessor.push_back(root);
+		children.push_back(childrenNode);
+		childrenNode.outputVector();
 	}
 }
-
-void boardLibrary::moveDown(int x, int root[puzzle_size])
+void boardLibrary::moveDown(int x, boardLibrary root)
 {
-	boardLibrary tempObj;
 	if(x + columns < puzzle_size)
 	{
-		int childBoard[puzzle_size];
-		tempObj.duplicateBoard(childBoard, root);
-		swap(childBoard[x + 3], childBoard[x]);
-		tempObj.duplicateBoard(parent, root);
+		boardLibrary childrenNode;
+		duplicateBoard(childrenNode.parent, root.parent);
+		cout << "move down" << endl;
+		//outputVector();
+		swap(childrenNode.parent[x + 3], childrenNode.parent[x]);
+		childrenNode.predessor.push_back(root);
+		children.push_back(childrenNode);
+		childrenNode.outputVector();
+	}
+}
+void boardLibrary::expansion(boardLibrary root)
+{
+	root.outputVector();
+	cout << "prior to expansion: " << endl;
+	root.goalCheck();		//performs check if the goal matrix is found
+	int zeroPos = root.findZero();
 
-		boardLibrary ChildrenBoard;		//create object from class boardLibrary
-		tempObj.duplicateBoard(ChildrenBoard.parent, childBoard);	//creates a copy from the childboard to ChildrenBoard Object
-		tempObj.children.push_back(ChildrenBoard); //pushes back the new object with board into list
+	moveRight(zeroPos, root);
+	moveLeft(zeroPos, root);
+	moveUp(zeroPos, root);
+	moveDown(zeroPos, root);
+
+	cout << "expansion is finished: " << endl;
+}
+bool boardLibrary::samePuzzle(boardLibrary node)
+{
+	bool samePuzzle = true;
+	for (int i = 0; i < puzzle_size; i++)
+	{
+		if( parent[i] != node.parent[i])
+		{
+			samePuzzle = false;
+		}
+	}
+	return samePuzzle;
+}
+bool contains(vector<boardLibrary> list, boardLibrary object)
+{
+	bool contains = false;
+
+	for(int i = 0; i < list.size(); i++)
+	{
+		if(list[i].samePuzzle(object))
+		{
+			contains = true;
+		}
+	}
+	return contains;
+}
+void boardLibrary::uniformSearch(boardLibrary node)
+{
+	cout << "is this being called:" << endl;
+	vector<boardLibrary> newNodes;
+	vector<boardLibrary> visitedNodes;
+
+	newNodes.push_back(node);
+	bool goalFound = false;
+
+	while(newNodes.size() > 0 && !goalFound)
+	{
+		//cout << "size of newNodes: " << newNodes.size() << endl;
+
+		boardLibrary currentNode = newNodes.front();		//current node of system is first in newNodes
+		//cout << "output a set of the first nodes: " << endl;
+		currentNode.outputVector();
+		visitedNodes.push_back(currentNode);				//puts the currentnode in the visited Queue
+		cout << "size of VisitedNodes: " << visitedNodes.size() << endl;
+		newNodes.erase(newNodes.begin());								//removes it from list of nodes needing to be seen
+
+		expansion(currentNode);
+		cout << "output children size: " << currentNode.children.size() << endl;
+
+		for(int i  = 0; i < this->children.size(); i++)
+		{
+			//cout << "is this even entering into this? " << endl;  
+			boardLibrary currentChild = this->children[i];
+			if(currentChild.goalCheck())
+			{
+				cout << "Goal Found!!!!" << endl;
+				goalFound = true;
+				currentChild.outputVector();
+				pathtrace(currentChild);
+			}
+			if(!contains(newNodes, currentChild) && !contains(visitedNodes, currentChild))
+			{
+				newNodes.push_back(currentChild);
+			}
+		}
 	}
 }
 
-void boardLibrary::expansion(int arr[puzzle_size])
+bool boardLibrary::checkOrigMatrix(boardLibrary node)
 {
-	boardLibrary helperObj;
-	int zeroPos = helperObj.findZero(arr);
+	if (node.parent[0] == 1 && node.parent[1] == 2 && node.parent[2] == 3 && node.parent[3] == 4 && node.parent[4] == 6 && node.parent[5] == 0 && node.parent[6] == 7 && node.parent[7] == 5 && node.parent[8] == 8)
+	{
+		return true;
+	}
+	return false;
 
-	moveRight(zeroPos, arr);
-	moveLeft(zeroPos, arr);
-	moveUp(zeroPos, arr);
-	moveDown(zeroPos, arr);
+}
+
+void boardLibrary::pathtrace(boardLibrary node)
+{
+	vector<boardLibrary> path;
+	cout << "tracing path currently" << endl;
+
+	while(checkOrigMatrix(node) != true)
+	{
+		node = node.predessor.front();
+		cout << "outputting each iteration in between: " << endl;
+		node.outputVector();
+		path.push_back(node);
+	}
 }
 
 int main()
 {
 	int puzzle[puzzle_size];
+	int userInput;
+	cout << "Welcome to Calvin Kwan's 8-puzzle solver. " << endl;
+	cout << "Type 1 to use default puzzle, or 2 to enter in your own puzzle: " << endl;
+	cin >> userInput;
+	if (userInput == 1)
+	{
+		puzzle[0] = 1;
+		puzzle[1] = 2;
+		puzzle[2] = 3;
+
+		puzzle[3] = 4;
+		puzzle[4] = 6;
+		puzzle[5] = 0;
+
+		puzzle[6] = 7;
+		puzzle[7] = 5;
+		puzzle[8] = 8;
+
+		cout << endl;
+
+		boardLibrary object;
+		object.duplicateBoard(object.parent, puzzle);
+		object.uniformSearch(object);
+
+
+	}
 	cout << "Please enter in your puzzle board using zero to represent your blank spot " << endl;
 	cout << "Please enter in 3 numbers with spaces in between them: " << endl;
 	int spot1, spot2, spot3;
 	//cin >> spot1 >> spot2 >> spot3; 
+	// zero = 1;
+	// one = 2;
+	// three = 3;
 	puzzle[0] = 1;
 	puzzle[1] = 2;
 	puzzle[2] = 3;
 
 	cout << endl << "Please input in the second row of numbers with spaces in between them: " << endl;
 	//cin >> spot1 >> spot2 >> spot3;
+	// four = 4;
+	// five = 6;
+	// six = 0;
 	puzzle[3] = 4;
-	puzzle[4] = 0;
-	puzzle[5] = 5;
+	puzzle[4] = 6;
+	puzzle[5] = 0;
 
 	cout << endl << "Please input in the third row of numbers with spaces in between them: " << endl;
 	//cin >> spot1 >> spot2 >> spot3;
-	puzzle[6] = 6;
-	puzzle[7] = 7;
+	seven = 7;
+	eight = 5; 
+	nine = 8;
+	puzzle[6] = 7;
+	puzzle[7] = 5;
 	puzzle[8] = 8;
 
 	cout << endl;
 
 	boardLibrary object;
-	object.outputVector(puzzle);
-	cout << "output second puzzle " << endl;
-	//object.findZero(puzzle);
-	object.moveRight(4, puzzle);
+	object.duplicateBoard(object.parent, puzzle);
+	object.uniformSearch(object);
+
 }

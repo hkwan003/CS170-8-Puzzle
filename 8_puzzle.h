@@ -2,22 +2,33 @@
 
 using namespace std;
 
+const int puzzle_size = 9;
 
 class boardLibrary
 {
+	// private:
+	// 	int parent[puzzle_size];
+	// 	list<boardLibrary> children;
+
 	private:
-		int parent[9];
-		list<boardLibrary> children;
 
 	public:
 		boardLibrary();
-		void moveUp(int x, int parent[9]);
-		void moveDown(int x, int parent[9]);
-		void moveLeft(int x, int parent[9]);
-		void moveRight(int x, int parent[9]);
-		int findZero(int board[9]);
-		void outputVector(int board[9]);
-		bool goalCheck(int board[9]);
-		void duplicateBoard(int destBoard[9], int origBoard[9]);
-		void expansion(int parent[9]);
+		int parent[puzzle_size];
+		vector<boardLibrary> children;
+		vector<boardLibrary> predessor;
+		void moveUp(int x, boardLibrary root);
+		void moveDown(int x, boardLibrary root);
+		void moveLeft(int x, boardLibrary root);
+		void moveRight(int x, boardLibrary root);
+		int findZero();
+		void outputVector();
+		bool goalCheck();
+		void duplicateBoard(int destBoard[puzzle_size], int origBoard[puzzle_size]);
+		void expansion(boardLibrary node);
+		bool ifListContainsNode(boardLibrary node);
+		bool samePuzzle(boardLibrary node);
+		void uniformSearch(boardLibrary node);
+		void pathtrace(boardLibrary node);
+		bool checkOrigMatrix(boardLibrary node);
 };
