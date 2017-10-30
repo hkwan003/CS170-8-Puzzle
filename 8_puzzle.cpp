@@ -2,13 +2,15 @@
 #include <vector>
 #include <queue>
 #include <list>
+#include <stack>
 #include "8_puzzle.h"
 
 using namespace std;
 
 const int columns = 3;
 const int rows = 3;
-int zero, one, two, three, four, five, six, seven, eight, nine;
+int puzzle[puzzle_size];
+stack<boardLibrary> traceback;
 
 boardLibrary::boardLibrary()
 {
@@ -46,6 +48,7 @@ bool boardLibrary::goalCheck()
 		return false;
 	}
 }
+
 void boardLibrary::duplicateBoard(int destBoard[puzzle_size], int origBoard[puzzle_size])
 {
 	for (int i = 0; i < puzzle_size; i++)
@@ -59,12 +62,12 @@ void boardLibrary::moveRight(int x, boardLibrary root)
 	{
 		boardLibrary childrenNode;
 		duplicateBoard(childrenNode.parent, root.parent);
-		cout << "move right" << endl;
+		//cout << "move right" << endl;
 		//outputVector();
 		swap(childrenNode.parent[x + 1], childrenNode.parent[x]);	//perform swap operation on board
 		childrenNode.predessor.push_back(root);
 		children.push_back(childrenNode);
-		childrenNode.outputVector();
+		//childrenNode.outputVector();
 
 	}
 }
@@ -74,12 +77,12 @@ void boardLibrary::moveLeft(int x, boardLibrary root)
 	{
 		boardLibrary childrenNode;
 		duplicateBoard(childrenNode.parent, root.parent);
-		cout << "move left" << endl;
+		//cout << "move left" << endl;
 		//outputVector();
 		swap(childrenNode.parent[x - 1], childrenNode.parent[x]);
 		childrenNode.predessor.push_back(root);
 		children.push_back(childrenNode);
-		childrenNode.outputVector();
+		//childrenNode.outputVector();
 	}
 }
 void boardLibrary::moveUp(int x, boardLibrary root)
@@ -88,12 +91,12 @@ void boardLibrary::moveUp(int x, boardLibrary root)
 	{
 		boardLibrary childrenNode;
 		duplicateBoard(childrenNode.parent, root.parent);
-		cout << "move up" << endl;
+		//cout << "move up" << endl;
 		//outputVector();
 		swap(childrenNode.parent[x - 3], childrenNode.parent[x]);
 		childrenNode.predessor.push_back(root);
 		children.push_back(childrenNode);
-		childrenNode.outputVector();
+		//childrenNode.outputVector();
 	}
 }
 void boardLibrary::moveDown(int x, boardLibrary root)
@@ -102,18 +105,16 @@ void boardLibrary::moveDown(int x, boardLibrary root)
 	{
 		boardLibrary childrenNode;
 		duplicateBoard(childrenNode.parent, root.parent);
-		cout << "move down" << endl;
+		//cout << "move down" << endl;
 		//outputVector();
 		swap(childrenNode.parent[x + 3], childrenNode.parent[x]);
 		childrenNode.predessor.push_back(root);
 		children.push_back(childrenNode);
-		childrenNode.outputVector();
+		//childrenNode.outputVector();
 	}
 }
 void boardLibrary::expansion(boardLibrary root)
 {
-	root.outputVector();
-	cout << "prior to expansion: " << endl;
 	root.goalCheck();		//performs check if the goal matrix is found
 	int zeroPos = root.findZero();
 
@@ -121,8 +122,6 @@ void boardLibrary::expansion(boardLibrary root)
 	moveLeft(zeroPos, root);
 	moveUp(zeroPos, root);
 	moveDown(zeroPos, root);
-
-	cout << "expansion is finished: " << endl;
 }
 bool boardLibrary::samePuzzle(boardLibrary node)
 {
@@ -151,10 +150,11 @@ bool contains(vector<boardLibrary> list, boardLibrary object)
 }
 void boardLibrary::uniformSearch(boardLibrary node)
 {
-	cout << "is this being called:" << endl;
 	vector<boardLibrary> newNodes;
 	vector<boardLibrary> visitedNodes;
-
+	cout << "Expanding State: " << endl;
+	node.outputVector();
+	cout << endl;
 	newNodes.push_back(node);
 	bool goalFound = false;
 
@@ -164,9 +164,9 @@ void boardLibrary::uniformSearch(boardLibrary node)
 
 		boardLibrary currentNode = newNodes.front();		//current node of system is first in newNodes
 		//cout << "output a set of the first nodes: " << endl;
-		currentNode.outputVector();
+		//currentNode.outputVector();
 		visitedNodes.push_back(currentNode);				//puts the currentnode in the visited Queue
-		cout << "size of VisitedNodes: " << visitedNodes.size() << endl;
+		//cout << "size of VisitedNodes: " << visitedNodes.size() << endl;
 		newNodes.erase(newNodes.begin());								//removes it from list of nodes needing to be seen
 
 		expansion(currentNode);
@@ -180,7 +180,8 @@ void boardLibrary::uniformSearch(boardLibrary node)
 			{
 				cout << "Goal Found!!!!" << endl;
 				goalFound = true;
-				currentChild.outputVector();
+				traceback.push(currentChild);
+				//currentChild.outputVector();
 				pathtrace(currentChild);
 			}
 			if(!contains(newNodes, currentChild) && !contains(visitedNodes, currentChild))
@@ -193,7 +194,7 @@ void boardLibrary::uniformSearch(boardLibrary node)
 
 bool boardLibrary::checkOrigMatrix(boardLibrary node)
 {
-	if (node.parent[0] == 1 && node.parent[1] == 2 && node.parent[2] == 3 && node.parent[3] == 4 && node.parent[4] == 6 && node.parent[5] == 0 && node.parent[6] == 7 && node.parent[7] == 5 && node.parent[8] == 8)
+	if (node.parent[0] == puzzle[0] && node.parent[1] == puzzle[1] && node.parent[2] == puzzle[2] && node.parent[3] == puzzle[3] && node.parent[4] == puzzle[4] && node.parent[5] == puzzle[5] && node.parent[6] == puzzle[6] && node.parent[7] == puzzle[7] && node.parent[8] == puzzle[8])
 	{
 		return true;
 	}
@@ -209,15 +210,21 @@ void boardLibrary::pathtrace(boardLibrary node)
 	while(checkOrigMatrix(node) != true)
 	{
 		node = node.predessor.front();
-		cout << "outputting each iteration in between: " << endl;
-		node.outputVector();
-		path.push_back(node);
+		traceback.push(node);
+		//path.push_back(node);
+	}
+
+	while(!traceback.empty())
+	{
+		cout << "printing traceback: " << endl;
+		boardLibrary obj = traceback.top();
+		traceback.pop();
+		obj.outputVector();
 	}
 }
 
 int main()
 {
-	int puzzle[puzzle_size];
 	int userInput;
 	cout << "Welcome to Calvin Kwan's 8-puzzle solver. " << endl;
 	cout << "Type 1 to use default puzzle, or 2 to enter in your own puzzle: " << endl;
@@ -225,50 +232,48 @@ int main()
 	if (userInput == 1)
 	{
 		puzzle[0] = 1;
-		puzzle[1] = 2;
-		puzzle[2] = 3;
+		puzzle[1] = 0;
+		puzzle[2] = 8;
 
 		puzzle[3] = 4;
 		puzzle[4] = 6;
-		puzzle[5] = 0;
+		puzzle[5] = 2;
 
-		puzzle[6] = 7;
-		puzzle[7] = 5;
-		puzzle[8] = 8;
+		puzzle[6] = 5;
+		puzzle[7] = 3;
+		puzzle[8] = 7;
 
 		cout << endl;
 
 		boardLibrary object;
 		object.duplicateBoard(object.parent, puzzle);
 		object.uniformSearch(object);
-
-
 	}
 	cout << "Please enter in your puzzle board using zero to represent your blank spot " << endl;
 	cout << "Please enter in 3 numbers with spaces in between them: " << endl;
 	int spot1, spot2, spot3;
-	//cin >> spot1 >> spot2 >> spot3; 
-	// zero = 1;
-	// one = 2;
-	// three = 3;
+	// cin >> spot1 >> spot2 >> spot3; 
+	// zero = spot1;
+	// one = spot2;
+	// three = spot3;
 	puzzle[0] = 1;
 	puzzle[1] = 2;
 	puzzle[2] = 3;
 
 	cout << endl << "Please input in the second row of numbers with spaces in between them: " << endl;
-	//cin >> spot1 >> spot2 >> spot3;
-	// four = 4;
-	// five = 6;
-	// six = 0;
+	// cin >> spot1 >> spot2 >> spot3;
+	// four = spot1;
+	// five = spot2;
+	// six = spot3;
 	puzzle[3] = 4;
-	puzzle[4] = 6;
-	puzzle[5] = 0;
+	puzzle[4] = 0;
+	puzzle[5] = 6;
 
 	cout << endl << "Please input in the third row of numbers with spaces in between them: " << endl;
-	//cin >> spot1 >> spot2 >> spot3;
-	seven = 7;
-	eight = 5; 
-	nine = 8;
+	// cin >> spot1 >> spot2 >> spot3;
+	// seven = spot1;
+	// eight = spot2; 
+	// nine = spot3;
 	puzzle[6] = 7;
 	puzzle[7] = 5;
 	puzzle[8] = 8;
