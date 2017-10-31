@@ -217,6 +217,48 @@ void boardLibrary::pathtrace(boardLibrary node)
 	}
 }
 
+int boardLibrary::checkMisplace(boardLibrary node)
+{
+	int cost = 0;
+	if(node.parent[0] != 1)
+	{
+		cost++;
+	}
+	if(node.parent[1] != 2)
+	{
+		cost++;
+	}
+	if(node.parent[2] != 3)
+	{
+		cost++;
+	}
+	if(node.parent[3] != 4)
+	{
+		cost++;
+	}
+	if(node.parent[4] != 5)
+	{
+		cost++;
+	}
+	if(node.parent[5] != 6)
+	{
+		cost++;
+	}
+	if(node.parent[6] != 7)
+	{
+		cost++;
+	}
+	if(node.parent[7] != 8)
+	{
+		cost++;
+	}
+	if(node.parent[8] != 0)
+	{
+		cost++;
+	}
+	return cost;
+}
+
 int main()
 {
 	depth = 0;			//setting the g(n) = 0
@@ -293,6 +335,7 @@ int main()
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
 			object.uniformSearch(object);
+			cout << "Misplace tile cost: " << object.checkMisplace(object) << endl;
 			outputDepth();
 		}
 		
