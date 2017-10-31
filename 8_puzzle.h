@@ -17,6 +17,8 @@ class boardLibrary
 		int parent[puzzle_size];
 		vector<boardLibrary> children;
 		vector<boardLibrary> predessor;
+		int depth;
+		int heuristic;
 		void moveUp(int x, boardLibrary root);
 		void moveDown(int x, boardLibrary root);
 		void moveLeft(int x, boardLibrary root);
@@ -32,4 +34,5 @@ class boardLibrary
 		void pathtrace(boardLibrary node);
 		bool checkOrigMatrix(boardLibrary node);
 		int checkMisplace(boardLibrary node);
+		void misplaced(boardLibrary node);
 };

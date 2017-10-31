@@ -7,13 +7,28 @@
 
 using namespace std;
 
+struct overLoadComparsion
+{
+	bool operator()(const boardLibrary node1, const boardLibrary node2)
+	{
+		return (node1.depth + node1.heuristic) < (node2.depth + node2.heuristic);
+	}
+};
+
 const int columns = 3;
 const int rows = 3;
 int puzzle[puzzle_size];
 stack<boardLibrary> traceback;
 vector<boardLibrary> newNodes;
 vector<boardLibrary> visitedNodes;
+
+// bool overLoadComparsion(boardLibrary node1, boardLibrary node2)
+// {
+// 	return true;
+// }
+priority_queue< boardLibrary, vector<boardLibrary> , overLoadComparsion >priorityQ;
 int depth;
+
 
 boardLibrary::boardLibrary()
 {
@@ -193,6 +208,11 @@ bool boardLibrary::checkOrigMatrix(boardLibrary node)
 
 }
 
+void boardLibrary::misplaced(boardLibrary node)
+{
+
+}
+
 
 
 void boardLibrary::pathtrace(boardLibrary node)
@@ -337,6 +357,10 @@ int main()
 			object.uniformSearch(object);
 			cout << "Misplace tile cost: " << object.checkMisplace(object) << endl;
 			outputDepth();
+		}
+		if(userInput == 3)
+		{
+
 		}
 		
 	}
