@@ -3,6 +3,7 @@
 #include <queue>
 #include <list>
 #include <stack>
+#include <cmath>
 #include "8_puzzle.h"
 
 using namespace std;
@@ -11,7 +12,7 @@ struct overLoadComparsion
 {
 	bool operator()(const boardLibrary node1, const boardLibrary node2)
 	{
-		return (node1.depth + node1.heuristic) < (node2.depth + node2.heuristic);
+		return (node1.depth + node1.heuristic) > (node2.depth + node2.heuristic);
 	}
 };
 
@@ -26,8 +27,9 @@ vector<boardLibrary> visitedNodes;
 // {
 // 	return true;
 // }
-priority_queue< boardLibrary, vector<boardLibrary> , overLoadComparsion >priorityQ;
+priority_queue< boardLibrary, vector<boardLibrary> , overLoadComparsion >priorityQ; //make min-heap
 int depth;
+int childrenDepth = 0;
 
 
 boardLibrary::boardLibrary()
@@ -43,6 +45,14 @@ void boardLibrary::outputVector()
 	cout << this->parent[3] << " " << this->parent[4] << " " << this->parent[5] << endl;
 	cout << this->parent[6] << " " << this->parent[7] << " " << this->parent[8] << endl;
 }
+
+void boardLibrary::outputVector(int nodeParent[9])
+{
+	cout << nodeParent[0] << " " << nodeParent[1] << " " << nodeParent[2] << endl;
+	cout << nodeParent[3] << " " << nodeParent[4] << " " << nodeParent[5] << endl;
+	cout << nodeParent[6] << " " << nodeParent[7] << " " << nodeParent[8] << endl;
+}
+
 int boardLibrary::findZero()
 {
 	for (int i = 0; i < puzzle_size; i++)
@@ -82,9 +92,14 @@ void boardLibrary::moveRight(int x, boardLibrary root)
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move right" << endl;
 		swap(childrenNode.parent[x + 1], childrenNode.parent[x]);	//perform swap operation on board
-		//childrenNode.outputVector();
+		childrenNode.depth = childrenDepth;
+		childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
+		childrenNode.outputVector();
+		cout << endl;
 		childrenNode.predessor.push_back(root);
 		newNodes.push_back(childrenNode);
+		priorityQ.push(childrenNode);
 		//childrenNode.outputVector();
 
 	}
@@ -97,9 +112,14 @@ void boardLibrary::moveLeft(int x, boardLibrary root)
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move left" << endl;
 		swap(childrenNode.parent[x - 1], childrenNode.parent[x]);
-		//childrenNode.outputVector();
+		childrenNode.depth = childrenDepth;
+		childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
+		childrenNode.outputVector();
+		cout << endl;
 		childrenNode.predessor.push_back(root);
 		newNodes.push_back(childrenNode);
+		priorityQ.push(childrenNode);
 		//childrenNode.outputVector();
 	}
 }
@@ -111,9 +131,14 @@ void boardLibrary::moveUp(int x, boardLibrary root)
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move up" << endl;
 		swap(childrenNode.parent[x - 3], childrenNode.parent[x]);
-		//childrenNode.outputVector();
+		childrenNode.depth = childrenDepth;
+		childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
+		childrenNode.outputVector();
+		cout << endl;
 		childrenNode.predessor.push_back(root);
 		newNodes.push_back(childrenNode);
+		priorityQ.push(childrenNode);
 		//childrenNode.outputVector();
 	}
 }
@@ -125,9 +150,14 @@ void boardLibrary::moveDown(int x, boardLibrary root)
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move down" << endl;
 		swap(childrenNode.parent[x + 3], childrenNode.parent[x]);
-		//childrenNode.outputVector();
+		childrenNode.depth = childrenDepth;
+		childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
+		childrenNode.outputVector();
+		cout << endl;
 		childrenNode.predessor.push_back(root);
 		newNodes.push_back(childrenNode);
+		priorityQ.push(childrenNode);
 		//childrenNode.outputVector();
 	}
 }
@@ -135,7 +165,7 @@ void boardLibrary::expansion(boardLibrary root)
 {
 	root.goalCheck();		//performs check if the goal matrix is found
 	int zeroPos = root.findZero();
-
+	childrenDepth++;
 	moveRight(zeroPos, root);
 	moveLeft(zeroPos, root);
 	moveUp(zeroPos, root);
@@ -208,9 +238,217 @@ bool boardLibrary::checkOrigMatrix(boardLibrary node)
 
 }
 
+void boardLibrary::manhattan(boardLibrary node)
+{
+	int one = 0;
+	int two = 1;
+	int three = 2;
+	int four = 3;
+	int five = 4;
+	int six = 5;
+	int seven = 6;
+	int eight = 7;
+
+	for(int i = 0; i < puzzle_size; i++)
+	{
+		if(node.parent[i] != 0)
+		{
+			if(node.parent[i] == 1)
+			{
+				int temp = (abs(i - one));
+				if(temp == 1 || temp == 3)
+				{
+					node.heuristic += 1;
+				}
+				if(temp == 2 || temp == 4 || temp == 6)
+				{
+					node.heuristic += 2;
+				}
+				if(temp == 5 || temp == 7)
+				{
+					node.heuristic += 3;
+				}
+				if(temp == 8)
+				{
+					node.heuristic += 4;
+				}
+
+			}
+			if(node.parent[i] == 2)
+			{
+				int temp = (abs(i - two));
+				if(temp == 1 || temp == 3)
+				{
+					node.heuristic += 1;
+				}
+				if(temp == 2 || temp == 4 || temp == 6)
+				{
+					node.heuristic += 2;
+				}
+				if(temp == 5 || temp == 7)
+				{
+					node.heuristic += 3;
+				}
+				if(temp == 8)
+				{
+					node.heuristic += 4;
+				}	
+			}
+			if(node.parent[i] == 3)
+			{
+				int temp = (abs(i - three));
+				if(temp == 1 || temp == 3)
+				{
+					node.heuristic += 1;
+				}
+				if(temp == 2 || temp == 4 || temp == 6)
+				{
+					node.heuristic += 2;
+				}
+				if(temp == 5 || temp == 7)
+				{
+					node.heuristic += 3;
+				}
+				if(temp == 8)
+				{
+					node.heuristic += 4;
+				}
+			}
+			if(node.parent[i] == 4)
+			{
+				int temp = (abs(i - four));
+				if(temp == 1 || temp == 3)
+				{
+					node.heuristic += 1;
+				}
+				if(temp == 2 || temp == 4 || temp == 6)
+				{
+					node.heuristic += 2;
+				}
+				if(temp == 5 || temp == 7)
+				{
+					node.heuristic += 3;
+				}
+				if(temp == 8)
+				{
+					node.heuristic += 4;
+				}
+			}
+			if(node.parent[i] == 5)
+			{
+				cout << "does it go in here?" << endl;
+				int temp = (abs(i - five));
+				if(temp == 1 || temp == 3)
+				{
+					node.heuristic += 1;
+				}
+				if(temp == 2 || temp == 4 || temp == 6)
+				{
+					node.heuristic += 2;
+				}
+				if(temp == 5 || temp == 7)
+				{
+					node.heuristic += 3;
+				}
+				if(temp == 8)
+				{
+					node.heuristic += 4;
+				}
+			}
+			if(node.parent[i] == 6)
+			{
+				int temp = (abs(i - six));
+				if(temp == 1 || temp == 3)
+				{
+					node.heuristic += 1;
+				}
+				if(temp == 2 || temp == 4 || temp == 6)
+				{
+					node.heuristic += 2;
+				}
+				if(temp == 5 || temp == 7)
+				{
+					node.heuristic += 3;
+				}
+				if(temp == 8)
+				{
+					node.heuristic += 4;
+				}
+			}
+			if(node.parent[i] == 7)
+			{
+				int temp = (abs(i - seven));
+				if(temp == 1 || temp == 3)
+				{
+					node.heuristic += 1;
+				}
+				if(temp == 2 || temp == 4 || temp == 6)
+				{
+					node.heuristic += 2;
+				}
+				if(temp == 5 || temp == 7)
+				{
+					node.heuristic += 3;
+				}
+				if(temp == 8)
+				{
+					node.heuristic += 4;
+				}
+			}
+			if(node.parent[i] == 8)
+			{
+				int temp = (abs(i - eight));
+				if(temp == 1 || temp == 3)
+				{
+					node.heuristic += 1;
+				}
+				if(temp == 2 || temp == 4 || temp == 6)
+				{
+					node.heuristic += 2;
+				}
+				if(temp == 5 || temp == 7)
+				{
+					node.heuristic += 3;
+				}
+				if(temp == 8)
+				{
+					node.heuristic += 4;
+				}
+			}
+		}
+	}
+	cout << endl;
+	node.outputVector();
+	cout << endl;
+	cout << "Manhattan distance: " << node.heuristic << endl;
+
+}
+
 void boardLibrary::misplaced(boardLibrary node)
 {
+	cout << "inside of misplaced tile heuristic" << endl;
+	node.depth = 0;
+	node.heuristic = checkMisplace(node);
+	priorityQ.push(node);
+	bool goalFound = false;
 
+	while(priorityQ.size() > 0 && !goalFound)
+	{
+		boardLibrary currentNode = priorityQ.top();
+		visitedNodes.push_back(currentNode);
+		if(currentNode.goalCheck() == false)
+		{
+			priorityQ.pop();
+			expansion(currentNode);
+		}
+		else
+		{
+			goalFound = true;
+			cout << "Goal Found!!!" << endl;
+			traceback.push(currentNode);
+			pathtrace(currentNode);
+		}
+	}
 }
 
 
@@ -269,10 +507,6 @@ int boardLibrary::checkMisplace(boardLibrary node)
 		cost++;
 	}
 	if(node.parent[7] != 8)
-	{
-		cost++;
-	}
-	if(node.parent[8] != 0)
 	{
 		cost++;
 	}
@@ -354,13 +588,16 @@ int main()
 		{
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
-			object.uniformSearch(object);
-			cout << "Misplace tile cost: " << object.checkMisplace(object) << endl;
-			outputDepth();
+			object.misplaced(object);
+			//object.uniformSearch(object);
+			//cout << "Misplace tile cost: " << object.checkMisplace(object) << endl;
+			//outputDepth();
 		}
 		if(userInput == 3)
 		{
-
+			boardLibrary object;
+			object.duplicateBoard(object.parent, puzzle);
+			object.manhattan(object);
 		}
 		
 	}

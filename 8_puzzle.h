@@ -25,6 +25,7 @@ class boardLibrary
 		void moveRight(int x, boardLibrary root);
 		int findZero();
 		void outputVector();
+		void outputVector(int origpuzzle[puzzle_size]);
 		bool goalCheck();
 		void duplicateBoard(int destBoard[puzzle_size], int origBoard[puzzle_size]);
 		void expansion(boardLibrary node);
@@ -35,4 +36,6 @@ class boardLibrary
 		bool checkOrigMatrix(boardLibrary node);
 		int checkMisplace(boardLibrary node);
 		void misplaced(boardLibrary node);
+		void manhattan(boardLibrary node);
+
 };
