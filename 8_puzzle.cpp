@@ -11,6 +11,9 @@ const int columns = 3;
 const int rows = 3;
 int puzzle[puzzle_size];
 stack<boardLibrary> traceback;
+vector<boardLibrary> newNodes;
+vector<boardLibrary> visitedNodes;
+int depth;
 
 boardLibrary::boardLibrary()
 {
@@ -63,10 +66,10 @@ void boardLibrary::moveRight(int x, boardLibrary root)
 		boardLibrary childrenNode;
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move right" << endl;
-		//outputVector();
 		swap(childrenNode.parent[x + 1], childrenNode.parent[x]);	//perform swap operation on board
+		//childrenNode.outputVector();
 		childrenNode.predessor.push_back(root);
-		children.push_back(childrenNode);
+		newNodes.push_back(childrenNode);
 		//childrenNode.outputVector();
 
 	}
@@ -78,10 +81,10 @@ void boardLibrary::moveLeft(int x, boardLibrary root)
 		boardLibrary childrenNode;
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move left" << endl;
-		//outputVector();
 		swap(childrenNode.parent[x - 1], childrenNode.parent[x]);
+		//childrenNode.outputVector();
 		childrenNode.predessor.push_back(root);
-		children.push_back(childrenNode);
+		newNodes.push_back(childrenNode);
 		//childrenNode.outputVector();
 	}
 }
@@ -92,10 +95,10 @@ void boardLibrary::moveUp(int x, boardLibrary root)
 		boardLibrary childrenNode;
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move up" << endl;
-		//outputVector();
 		swap(childrenNode.parent[x - 3], childrenNode.parent[x]);
+		//childrenNode.outputVector();
 		childrenNode.predessor.push_back(root);
-		children.push_back(childrenNode);
+		newNodes.push_back(childrenNode);
 		//childrenNode.outputVector();
 	}
 }
@@ -106,10 +109,10 @@ void boardLibrary::moveDown(int x, boardLibrary root)
 		boardLibrary childrenNode;
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move down" << endl;
-		//outputVector();
 		swap(childrenNode.parent[x + 3], childrenNode.parent[x]);
+		//childrenNode.outputVector();
 		childrenNode.predessor.push_back(root);
-		children.push_back(childrenNode);
+		newNodes.push_back(childrenNode);
 		//childrenNode.outputVector();
 	}
 }
@@ -150,8 +153,6 @@ bool contains(vector<boardLibrary> list, boardLibrary object)
 }
 void boardLibrary::uniformSearch(boardLibrary node)
 {
-	vector<boardLibrary> newNodes;
-	vector<boardLibrary> visitedNodes;
 	cout << "Expanding State: " << endl;
 	node.outputVector();
 	cout << endl;
@@ -160,36 +161,26 @@ void boardLibrary::uniformSearch(boardLibrary node)
 
 	while(newNodes.size() > 0 && !goalFound)
 	{
-		//cout << "size of newNodes: " << newNodes.size() << endl;
-
 		boardLibrary currentNode = newNodes.front();		//current node of system is first in newNodes
-		//cout << "output a set of the first nodes: " << endl;
-		//currentNode.outputVector();
 		visitedNodes.push_back(currentNode);				//puts the currentnode in the visited Queue
-		//cout << "size of VisitedNodes: " << visitedNodes.size() << endl;
-		newNodes.erase(newNodes.begin());								//removes it from list of nodes needing to be seen
-
-		expansion(currentNode);
-		cout << "output children size: " << currentNode.children.size() << endl;
-
-		for(int i  = 0; i < this->children.size(); i++)
+		if(currentNode.goalCheck() == false)
 		{
-			//cout << "is this even entering into this? " << endl;  
-			boardLibrary currentChild = this->children[i];
-			if(currentChild.goalCheck())
-			{
-				cout << "Goal Found!!!!" << endl;
-				goalFound = true;
-				traceback.push(currentChild);
-				//currentChild.outputVector();
-				pathtrace(currentChild);
-			}
-			if(!contains(newNodes, currentChild) && !contains(visitedNodes, currentChild))
-			{
-				newNodes.push_back(currentChild);
-			}
+			newNodes.erase(newNodes.begin());
+			expansion(currentNode);
+		}
+		else
+		{
+			goalFound = true;
+			cout << "Goal Found!!!" << endl;
+			traceback.push(currentNode);
+			pathtrace(currentNode);
 		}
 	}
+}
+
+void outputDepth()
+{
+	cout << "Depth of solution is: " << depth << endl;
 }
 
 bool boardLibrary::checkOrigMatrix(boardLibrary node)
@@ -202,6 +193,8 @@ bool boardLibrary::checkOrigMatrix(boardLibrary node)
 
 }
 
+
+
 void boardLibrary::pathtrace(boardLibrary node)
 {
 	vector<boardLibrary> path;
@@ -209,6 +202,7 @@ void boardLibrary::pathtrace(boardLibrary node)
 
 	while(checkOrigMatrix(node) != true)
 	{
+		depth++;
 		node = node.predessor.front();
 		traceback.push(node);
 		//path.push_back(node);
@@ -225,6 +219,7 @@ void boardLibrary::pathtrace(boardLibrary node)
 
 int main()
 {
+	depth = 0;			//setting the g(n) = 0
 	int userInput;
 	cout << "Welcome to Calvin Kwan's 8-puzzle solver. " << endl;
 	cout << "Type 1 to use default puzzle, or 2 to enter in your own puzzle: " << endl;
@@ -249,39 +244,58 @@ int main()
 		object.duplicateBoard(object.parent, puzzle);
 		object.uniformSearch(object);
 	}
-	cout << "Please enter in your puzzle board using zero to represent your blank spot " << endl;
-	cout << "Please enter in 3 numbers with spaces in between them: " << endl;
-	int spot1, spot2, spot3;
-	// cin >> spot1 >> spot2 >> spot3; 
-	// zero = spot1;
-	// one = spot2;
-	// three = spot3;
-	puzzle[0] = 1;
-	puzzle[1] = 2;
-	puzzle[2] = 3;
+	if(userInput == 2)
+	{
+		cout << "Please enter in your puzzle board using zero to represent your blank spot " << endl;
+		cout << "Please enter in 3 numbers with spaces in between them: " << endl;
+		int spot1, spot2, spot3;
+		cin >> spot1 >> spot2 >> spot3; 
+		puzzle[0] = spot1;
+		puzzle[1] = spot2;
+		puzzle[2] = spot3;
+		// puzzle[0] = 0;
+		// puzzle[1] = 1;
+		// puzzle[2] = 2;
 
-	cout << endl << "Please input in the second row of numbers with spaces in between them: " << endl;
-	// cin >> spot1 >> spot2 >> spot3;
-	// four = spot1;
-	// five = spot2;
-	// six = spot3;
-	puzzle[3] = 4;
-	puzzle[4] = 0;
-	puzzle[5] = 6;
+		cout << endl << "Please input in the second row of numbers with spaces in between them: " << endl;
+		cin >> spot1 >> spot2 >> spot3;
+		puzzle[3] = spot1;
+		puzzle[4] = spot2;
+		puzzle[5] = spot3;
+		// puzzle[3] = 4;
+		// puzzle[4] = 5;
+		// puzzle[5] = 3;
 
-	cout << endl << "Please input in the third row of numbers with spaces in between them: " << endl;
-	// cin >> spot1 >> spot2 >> spot3;
-	// seven = spot1;
-	// eight = spot2; 
-	// nine = spot3;
-	puzzle[6] = 7;
-	puzzle[7] = 5;
-	puzzle[8] = 8;
+		cout << endl << "Please input in the third row of numbers with spaces in between them: " << endl;
+		cin >> spot1 >> spot2 >> spot3;
+		puzzle[6] = spot1;
+		puzzle[7] = spot2; 
+		puzzle[8] = spot3;
+		// puzzle[6] = 7;
+		// puzzle[7] = 8;
+		// puzzle[8] = 6;
 
-	cout << endl;
+		cout << endl;
 
-	boardLibrary object;
-	object.duplicateBoard(object.parent, puzzle);
-	object.uniformSearch(object);
+		cout << "Enter your choice of algorithm: " << endl;
+		cout << endl << "1. Uniform Cost Search ";
+		cout << endl << "2. A* with Misplaced Tile heuristic ";
+		cout << endl << "3. A* with Manhattan distance heuristic " << endl;
+		cin >> userInput;
+		if(userInput == 1)
+		{
+			boardLibrary object;
+			object.duplicateBoard(object.parent, puzzle);
+			object.uniformSearch(object);
+		}
+		if(userInput == 2)
+		{
+			boardLibrary object;
+			object.duplicateBoard(object.parent, puzzle);
+			object.uniformSearch(object);
+			outputDepth();
+		}
+		
+	}
 
 }

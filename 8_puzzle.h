@@ -31,4 +31,5 @@ class boardLibrary
 		void uniformSearch(boardLibrary node);
 		void pathtrace(boardLibrary node);
 		bool checkOrigMatrix(boardLibrary node);
+		int checkMisplace(boardLibrary node);
 };
