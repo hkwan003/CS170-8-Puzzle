@@ -84,7 +84,7 @@ void boardLibrary::duplicateBoard(int destBoard[puzzle_size], int origBoard[puzz
 		destBoard[i] = origBoard[i];
 	}
 }
-void boardLibrary::moveRight(int x, boardLibrary root)
+void boardLibrary::moveRight(int x, boardLibrary root, int choice)
 {
 	if(x % columns < columns - 1)
 	{
@@ -92,19 +92,30 @@ void boardLibrary::moveRight(int x, boardLibrary root)
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move right" << endl;
 		swap(childrenNode.parent[x + 1], childrenNode.parent[x]);	//perform swap operation on board
-		childrenNode.depth = childrenDepth;
-		childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
-		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
-		childrenNode.outputVector();
 		cout << endl;
 		childrenNode.predessor.push_back(root);
-		newNodes.push_back(childrenNode);
-		priorityQ.push(childrenNode);
+		childrenNode.depth = childrenDepth;
+		if(choice == 1)
+		{
+			newNodes.push_back(childrenNode);
+			childrenNode.heuristic = 0;
+		}
+		if(choice == 2)
+		{
+			childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+			priorityQ.push(childrenNode);
+		}
+		if(choice == 3)
+		{
+			cout << "if it is checking the heuristic" << endl;
+			childrenNode.manhattan();
+			priorityQ.push(childrenNode);
+		}
 		//childrenNode.outputVector();
-
+		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
 	}
 }
-void boardLibrary::moveLeft(int x, boardLibrary root)
+void boardLibrary::moveLeft(int x, boardLibrary root, int choice)
 {
 	if(x % columns > 0)
 	{
@@ -112,18 +123,30 @@ void boardLibrary::moveLeft(int x, boardLibrary root)
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move left" << endl;
 		swap(childrenNode.parent[x - 1], childrenNode.parent[x]);
-		childrenNode.depth = childrenDepth;
-		childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
-		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
 		childrenNode.outputVector();
 		cout << endl;
 		childrenNode.predessor.push_back(root);
-		newNodes.push_back(childrenNode);
-		priorityQ.push(childrenNode);
+		childrenNode.depth = childrenDepth;
+		if(choice == 1)
+		{
+			newNodes.push_back(childrenNode);
+			childrenNode.heuristic = 0;
+		}
+		if(choice == 2)
+		{
+			childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+			priorityQ.push(childrenNode);
+		}
+		if(choice == 3)
+		{
+			childrenNode.manhattan();
+			priorityQ.push(childrenNode);
+		}
 		//childrenNode.outputVector();
+		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
 	}
 }
-void boardLibrary::moveUp(int x, boardLibrary root)
+void boardLibrary::moveUp(int x, boardLibrary root, int choice)
 {
 	if(x - columns >= 0)
 	{
@@ -131,18 +154,30 @@ void boardLibrary::moveUp(int x, boardLibrary root)
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move up" << endl;
 		swap(childrenNode.parent[x - 3], childrenNode.parent[x]);
-		childrenNode.depth = childrenDepth;
-		childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
-		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
 		childrenNode.outputVector();
 		cout << endl;
 		childrenNode.predessor.push_back(root);
-		newNodes.push_back(childrenNode);
-		priorityQ.push(childrenNode);
+		childrenNode.depth = childrenDepth;
+		if(choice == 1)
+		{
+			newNodes.push_back(childrenNode);
+			childrenNode.heuristic = 0;
+		}
+		if(choice == 2)
+		{
+			childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+			priorityQ.push(childrenNode);
+		}
+		if(choice == 3)
+		{
+			childrenNode.manhattan();
+			priorityQ.push(childrenNode);
+		}
+		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
 		//childrenNode.outputVector();
 	}
 }
-void boardLibrary::moveDown(int x, boardLibrary root)
+void boardLibrary::moveDown(int x, boardLibrary root, int choice)
 {
 	if(x + columns < puzzle_size)
 	{
@@ -150,26 +185,38 @@ void boardLibrary::moveDown(int x, boardLibrary root)
 		duplicateBoard(childrenNode.parent, root.parent);
 		//cout << "move down" << endl;
 		swap(childrenNode.parent[x + 3], childrenNode.parent[x]);
-		childrenNode.depth = childrenDepth;
-		childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
-		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
 		childrenNode.outputVector();
 		cout << endl;
 		childrenNode.predessor.push_back(root);
-		newNodes.push_back(childrenNode);
-		priorityQ.push(childrenNode);
+		childrenNode.depth = childrenDepth;
+		if(choice == 1)
+		{
+			newNodes.push_back(childrenNode);
+			childrenNode.heuristic = 0;
+		}
+		if(choice == 2)
+		{
+			childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+			priorityQ.push(childrenNode);
+		}
+		if(choice == 3)
+		{
+			childrenNode.manhattan();
+			priorityQ.push(childrenNode);
+		}
 		//childrenNode.outputVector();
+		cout << "children depth: " << childrenNode.depth << " childrenNode heuristic: " << childrenNode.heuristic << endl;
 	}
 }
-void boardLibrary::expansion(boardLibrary root)
+void boardLibrary::expansion(boardLibrary root, int x)
 {
 	root.goalCheck();		//performs check if the goal matrix is found
 	int zeroPos = root.findZero();
 	childrenDepth++;
-	moveRight(zeroPos, root);
-	moveLeft(zeroPos, root);
-	moveUp(zeroPos, root);
-	moveDown(zeroPos, root);
+	moveRight(zeroPos, root, x);
+	moveLeft(zeroPos, root, x);
+	moveUp(zeroPos, root, x);
+	moveDown(zeroPos, root, x);
 }
 bool boardLibrary::samePuzzle(boardLibrary node)
 {
@@ -196,7 +243,7 @@ bool contains(vector<boardLibrary> list, boardLibrary object)
 	}
 	return contains;
 }
-void boardLibrary::uniformSearch(boardLibrary node)
+void boardLibrary::uniformSearch(boardLibrary node, int choice)
 {
 	cout << "Expanding State: " << endl;
 	node.outputVector();
@@ -211,7 +258,7 @@ void boardLibrary::uniformSearch(boardLibrary node)
 		if(currentNode.goalCheck() == false)
 		{
 			newNodes.erase(newNodes.begin());
-			expansion(currentNode);
+			expansion(currentNode, choice);
 		}
 		else
 		{
@@ -238,7 +285,7 @@ bool boardLibrary::checkOrigMatrix(boardLibrary node)
 
 }
 
-void boardLibrary::manhattan(boardLibrary node)
+void boardLibrary::manhattan()
 {
 	int one = 0;
 	int two = 1;
@@ -248,183 +295,207 @@ void boardLibrary::manhattan(boardLibrary node)
 	int six = 5;
 	int seven = 6;
 	int eight = 7;
-
+	int heuristicCtr = 0;
 	for(int i = 0; i < puzzle_size; i++)
 	{
-		if(node.parent[i] != 0)
+		if(this->parent[i] != 0)
 		{
-			if(node.parent[i] == 1)
+			if(this->parent[i] == 1)
 			{
 				int temp = (abs(i - one));
 				if(temp == 1 || temp == 3)
 				{
-					node.heuristic += 1;
+					heuristicCtr += 1;
 				}
 				if(temp == 2 || temp == 4 || temp == 6)
 				{
-					node.heuristic += 2;
+					heuristicCtr += 2;
 				}
 				if(temp == 5 || temp == 7)
 				{
-					node.heuristic += 3;
+					heuristicCtr += 3;
 				}
 				if(temp == 8)
 				{
-					node.heuristic += 4;
+					heuristicCtr += 4;
 				}
 
 			}
-			if(node.parent[i] == 2)
+			if(this->parent[i] == 2)
 			{
 				int temp = (abs(i - two));
 				if(temp == 1 || temp == 3)
 				{
-					node.heuristic += 1;
+					heuristicCtr += 1;
 				}
 				if(temp == 2 || temp == 4 || temp == 6)
 				{
-					node.heuristic += 2;
+					heuristicCtr += 2;
 				}
 				if(temp == 5 || temp == 7)
 				{
-					node.heuristic += 3;
+					heuristicCtr += 3;
 				}
 				if(temp == 8)
 				{
-					node.heuristic += 4;
+					heuristicCtr += 4;
 				}	
 			}
-			if(node.parent[i] == 3)
+			if(this->parent[i] == 3)
 			{
 				int temp = (abs(i - three));
 				if(temp == 1 || temp == 3)
 				{
-					node.heuristic += 1;
+					heuristicCtr += 1;
 				}
 				if(temp == 2 || temp == 4 || temp == 6)
 				{
-					node.heuristic += 2;
+					heuristicCtr += 2;
 				}
 				if(temp == 5 || temp == 7)
 				{
-					node.heuristic += 3;
+					heuristicCtr += 3;
 				}
 				if(temp == 8)
 				{
-					node.heuristic += 4;
+					heuristicCtr += 4;
 				}
 			}
-			if(node.parent[i] == 4)
+			if(this->parent[i] == 4)
 			{
 				int temp = (abs(i - four));
 				if(temp == 1 || temp == 3)
 				{
-					node.heuristic += 1;
+					heuristicCtr += 1;
 				}
 				if(temp == 2 || temp == 4 || temp == 6)
 				{
-					node.heuristic += 2;
+					heuristicCtr += 2;
 				}
 				if(temp == 5 || temp == 7)
 				{
-					node.heuristic += 3;
+					heuristicCtr += 3;
 				}
 				if(temp == 8)
 				{
-					node.heuristic += 4;
+					heuristicCtr += 4;
 				}
 			}
-			if(node.parent[i] == 5)
+			if(this->parent[i] == 5)
 			{
-				cout << "does it go in here?" << endl;
+				// cout << "does it go in here?" << endl;
 				int temp = (abs(i - five));
 				if(temp == 1 || temp == 3)
 				{
-					node.heuristic += 1;
+					heuristicCtr += 1;
 				}
 				if(temp == 2 || temp == 4 || temp == 6)
 				{
-					node.heuristic += 2;
+					heuristicCtr += 2;
 				}
 				if(temp == 5 || temp == 7)
 				{
-					node.heuristic += 3;
+					heuristicCtr += 3;
 				}
 				if(temp == 8)
 				{
-					node.heuristic += 4;
+					heuristicCtr += 4;
 				}
 			}
-			if(node.parent[i] == 6)
+			if(this->parent[i] == 6)
 			{
 				int temp = (abs(i - six));
 				if(temp == 1 || temp == 3)
 				{
-					node.heuristic += 1;
+					heuristicCtr += 1;
 				}
 				if(temp == 2 || temp == 4 || temp == 6)
 				{
-					node.heuristic += 2;
+					heuristicCtr += 2;
 				}
 				if(temp == 5 || temp == 7)
 				{
-					node.heuristic += 3;
+					heuristicCtr += 3;
 				}
 				if(temp == 8)
 				{
-					node.heuristic += 4;
+					heuristicCtr += 4;
 				}
 			}
-			if(node.parent[i] == 7)
+			if(this->parent[i] == 7)
 			{
 				int temp = (abs(i - seven));
 				if(temp == 1 || temp == 3)
 				{
-					node.heuristic += 1;
+					heuristicCtr += 1;
 				}
 				if(temp == 2 || temp == 4 || temp == 6)
 				{
-					node.heuristic += 2;
+					heuristicCtr += 2;
 				}
 				if(temp == 5 || temp == 7)
 				{
-					node.heuristic += 3;
+					heuristicCtr += 3;
 				}
 				if(temp == 8)
 				{
-					node.heuristic += 4;
+					heuristicCtr += 4;
 				}
 			}
-			if(node.parent[i] == 8)
+			if(this->parent[i] == 8)
 			{
 				int temp = (abs(i - eight));
 				if(temp == 1 || temp == 3)
 				{
-					node.heuristic += 1;
+					heuristicCtr += 1;
 				}
 				if(temp == 2 || temp == 4 || temp == 6)
 				{
-					node.heuristic += 2;
+					heuristicCtr += 2;
 				}
 				if(temp == 5 || temp == 7)
 				{
-					node.heuristic += 3;
+					heuristicCtr += 3;
 				}
 				if(temp == 8)
 				{
-					node.heuristic += 4;
+					heuristicCtr += 4;
 				}
 			}
 		}
 	}
-	cout << endl;
-	node.outputVector();
-	cout << endl;
-	cout << "Manhattan distance: " << node.heuristic << endl;
-
+	this->heuristic = heuristicCtr;
+	cout << "the heuristic cost of this node: " << this->heuristic << endl;
 }
 
-void boardLibrary::misplaced(boardLibrary node)
+void boardLibrary::ManhattanDistanceSearch(boardLibrary node, int choice)
+{
+	node.depth = 0;
+	node.manhattan();
+	//cout << "node heuristic is: " << node.heuristic << endl;
+	priorityQ.push(node);
+	bool goalFound = false;
+
+	while(priorityQ.size() > 0 && !goalFound)
+	{
+		boardLibrary currentNode = priorityQ.top();
+		visitedNodes.push_back(currentNode);
+		if(currentNode.goalCheck() == false)
+		{
+			priorityQ.pop();
+			expansion(currentNode, choice);
+		}
+		else
+		{
+			goalFound = true;
+			cout << "Goal Found!!!" << endl;
+			traceback.push(currentNode);
+			pathtrace(currentNode);
+		}
+	}
+}
+
+void boardLibrary::misplaced(boardLibrary node, int choice)
 {
 	cout << "inside of misplaced tile heuristic" << endl;
 	node.depth = 0;
@@ -439,7 +510,7 @@ void boardLibrary::misplaced(boardLibrary node)
 		if(currentNode.goalCheck() == false)
 		{
 			priorityQ.pop();
-			expansion(currentNode);
+			expansion(currentNode, choice);
 		}
 		else
 		{
@@ -523,55 +594,16 @@ int main()
 	if (userInput == 1)
 	{
 		puzzle[0] = 1;
-		puzzle[1] = 0;
-		puzzle[2] = 8;
+		puzzle[1] = 2;
+		puzzle[2] = 3;
 
 		puzzle[3] = 4;
-		puzzle[4] = 6;
-		puzzle[5] = 2;
+		puzzle[4] = 0;
+		puzzle[5] = 6;
 
-		puzzle[6] = 5;
-		puzzle[7] = 3;
-		puzzle[8] = 7;
-
-		cout << endl;
-
-		boardLibrary object;
-		object.duplicateBoard(object.parent, puzzle);
-		object.uniformSearch(object);
-	}
-	if(userInput == 2)
-	{
-		cout << "Please enter in your puzzle board using zero to represent your blank spot " << endl;
-		cout << "Please enter in 3 numbers with spaces in between them: " << endl;
-		int spot1, spot2, spot3;
-		cin >> spot1 >> spot2 >> spot3; 
-		puzzle[0] = spot1;
-		puzzle[1] = spot2;
-		puzzle[2] = spot3;
-		// puzzle[0] = 0;
-		// puzzle[1] = 1;
-		// puzzle[2] = 2;
-
-		cout << endl << "Please input in the second row of numbers with spaces in between them: " << endl;
-		cin >> spot1 >> spot2 >> spot3;
-		puzzle[3] = spot1;
-		puzzle[4] = spot2;
-		puzzle[5] = spot3;
-		// puzzle[3] = 4;
-		// puzzle[4] = 5;
-		// puzzle[5] = 3;
-
-		cout << endl << "Please input in the third row of numbers with spaces in between them: " << endl;
-		cin >> spot1 >> spot2 >> spot3;
-		puzzle[6] = spot1;
-		puzzle[7] = spot2; 
-		puzzle[8] = spot3;
-		// puzzle[6] = 7;
-		// puzzle[7] = 8;
-		// puzzle[8] = 6;
-
-		cout << endl;
+		puzzle[6] = 7;
+		puzzle[7] = 5;
+		puzzle[8] = 8;
 
 		cout << "Enter your choice of algorithm: " << endl;
 		cout << endl << "1. Uniform Cost Search ";
@@ -582,22 +614,64 @@ int main()
 		{
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
-			object.uniformSearch(object);
+			object.uniformSearch(object, userInput);
 		}
 		if(userInput == 2)
 		{
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
-			object.misplaced(object);
-			//object.uniformSearch(object);
-			//cout << "Misplace tile cost: " << object.checkMisplace(object) << endl;
-			//outputDepth();
+			object.misplaced(object, userInput);
 		}
 		if(userInput == 3)
 		{
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
-			object.manhattan(object);
+			object.ManhattanDistanceSearch(object, userInput);
+		}
+	}
+	if(userInput == 2)
+	{
+		cout << "Please enter in your puzzle board using zero to represent your blank spot " << endl;
+		cout << "Please enter in 3 numbers with spaces in between them: " << endl;
+		int spot1, spot2, spot3;
+		cin >> spot1 >> spot2 >> spot3; 
+		puzzle[0] = spot1;
+		puzzle[1] = spot2;
+		puzzle[2] = spot3;
+		cout << endl << "Please input in the second row of numbers with spaces in between them: " << endl;
+		cin >> spot1 >> spot2 >> spot3;
+		puzzle[3] = spot1;
+		puzzle[4] = spot2;
+		puzzle[5] = spot3;
+		cout << endl << "Please input in the third row of numbers with spaces in between them: " << endl;
+		cin >> spot1 >> spot2 >> spot3;
+		puzzle[6] = spot1;
+		puzzle[7] = spot2; 
+		puzzle[8] = spot3;
+
+		cout << endl;
+		cout << "Enter your choice of algorithm: " << endl;
+		cout << endl << "1. Uniform Cost Search ";
+		cout << endl << "2. A* with Misplaced Tile heuristic ";
+		cout << endl << "3. A* with Manhattan distance heuristic " << endl;
+		cin >> userInput;
+		if(userInput == 1)
+		{
+			boardLibrary object;
+			object.duplicateBoard(object.parent, puzzle);
+			object.uniformSearch(object, userInput);
+		}
+		if(userInput == 2)
+		{
+			boardLibrary object;
+			object.duplicateBoard(object.parent, puzzle);
+			object.misplaced(object, userInput);
+		}
+		if(userInput == 3)
+		{
+			boardLibrary object;
+			object.duplicateBoard(object.parent, puzzle);
+			object.ManhattanDistanceSearch(object, userInput);
 		}
 		
 	}
