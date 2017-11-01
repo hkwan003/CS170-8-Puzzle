@@ -32,7 +32,7 @@ class boardLibrary
 		bool ifListContainsNode(boardLibrary node);
 		bool samePuzzle(boardLibrary node);
 		void uniformSearch(boardLibrary node, int x);
-		void pathtrace(boardLibrary node, int choice);
+		void pathtrace(boardLibrary node, int);
 		bool checkOrigMatrix(boardLibrary node);
 		int checkMisplace(boardLibrary node);
 		void misplaced(boardLibrary node, int x);
