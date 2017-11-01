@@ -485,7 +485,6 @@ void boardLibrary::manhattan()
 		}
 	}
 	this->heuristic = heuristicCtr;
-	cout << "the heuristic cost of this node: " << this->heuristic << endl;
 }
 
 void boardLibrary::ManhattanDistanceSearch(boardLibrary node, int choice)
@@ -541,9 +540,6 @@ void boardLibrary::misplaced(boardLibrary node, int choice)
 		}
 	}
 }
-
-
-
 void boardLibrary::pathtrace(boardLibrary node, int choice)
 {
 	vector<boardLibrary> path;
@@ -560,6 +556,10 @@ void boardLibrary::pathtrace(boardLibrary node, int choice)
 	{
 		boardLibrary obj = traceback.top();
 		traceback.pop();
+		if(choice == 3)
+		{
+			obj.manhattan();
+		}
 		cout << "The best state to expand with a g(n) = " << tracebackCtr << " and h(n) = " << obj.heuristic << " is..." << endl;
 		obj.outputVector();
 		tracebackCtr++;
@@ -614,7 +614,7 @@ int main()
 {
 	depth = 0;			//setting the g(n) = 0
 	int userInput;
-	cout << "Welcome to Calvin Kwan's 8-puzzle solver. " << endl;
+	cout << endl << "Welcome to Calvin Kwan's 8-puzzle solver. " << endl;
 	cout << "Type 1 to use default puzzle, or 2 to enter in your own puzzle: " << endl;
 	cin >> userInput;
 	if (userInput == 1)
