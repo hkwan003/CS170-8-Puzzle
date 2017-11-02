@@ -4,6 +4,7 @@
 #include <list>
 #include <stack>
 #include <cmath>
+#include <ctime>
 #include "8_puzzle.h"
 
 using namespace std;
@@ -15,7 +16,7 @@ struct overLoadComparsion
 		return (node1.depth + node1.heuristic) > (node2.depth + node2.heuristic);
 	}
 };
-
+int start_s, stop_s;
 const int columns = 3;
 const int rows = 3;
 int maxNewNodes = 0;
@@ -95,6 +96,14 @@ void boardLibrary::moveRight(int x, boardLibrary root, int choice)
 				{
 					childrenNode.heuristic = 0;
 				}
+				if(choice == 2)
+				{
+					childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+				}
+				if(choice == 3)
+				{
+					childrenNode.manhattan();
+				}
 				cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = 0 is..." << endl;
 				childrenNode.outputVector();
 				goalFound = true;
@@ -116,11 +125,17 @@ void boardLibrary::moveRight(int x, boardLibrary root, int choice)
 				{
 					childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
 					priorityQ.push(childrenNode);
+					cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = " << childrenNode.heuristic << " is..." << endl;
+					childrenNode.outputVector();
+					cout << endl << "Expanding this node...." << endl;
 				}
 				if(choice == 3)
 				{
 					childrenNode.manhattan();
 					priorityQ.push(childrenNode);
+					cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = " << childrenNode.heuristic << " is..." << endl;
+					childrenNode.outputVector();
+					cout << endl << "Expanding this node...." << endl;
 				}
 			}
 		}
@@ -145,6 +160,14 @@ void boardLibrary::moveLeft(int x, boardLibrary root, int choice)
 				{
 					childrenNode.heuristic = 0;
 				}
+				if(choice == 2)
+				{
+					childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+				}
+				if(choice == 3)
+				{
+					childrenNode.manhattan();
+				}
 				cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = 0 is..." << endl;
 				childrenNode.outputVector();
 				goalFound = true;
@@ -166,11 +189,17 @@ void boardLibrary::moveLeft(int x, boardLibrary root, int choice)
 				{
 					childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
 					priorityQ.push(childrenNode);
+					cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = " << childrenNode.heuristic << " is..." << endl;
+					childrenNode.outputVector();
+					cout << endl << "Expanding this node...." << endl;
 				}
 				if(choice == 3)
 				{
 					childrenNode.manhattan();
 					priorityQ.push(childrenNode);
+					cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = " << childrenNode.heuristic << " is..." << endl;
+					childrenNode.outputVector();
+					cout << endl << "Expanding this node...." << endl;
 				}
 			}
 		}
@@ -195,6 +224,14 @@ void boardLibrary::moveUp(int x, boardLibrary root, int choice)
 				{
 					childrenNode.heuristic = 0;
 				}
+				if(choice == 2)
+				{
+					childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+				}
+				if(choice == 3)
+				{
+					childrenNode.manhattan();
+				}
 				cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = 0 is..." << endl;
 				childrenNode.outputVector();
 				goalFound = true;
@@ -216,11 +253,17 @@ void boardLibrary::moveUp(int x, boardLibrary root, int choice)
 				{
 					childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
 					priorityQ.push(childrenNode);
+					cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = " << childrenNode.heuristic << " is..." << endl;
+					childrenNode.outputVector();
+					cout << endl << "Expanding this node...." << endl;
 				}
 				if(choice == 3)
 				{
 					childrenNode.manhattan();
 					priorityQ.push(childrenNode);
+					cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = " << childrenNode.heuristic << " is..." << endl;
+					childrenNode.outputVector();
+					cout << endl << "Expanding this node...." << endl;
 				}
 			}
 		}
@@ -245,6 +288,14 @@ void boardLibrary::moveDown(int x, boardLibrary root, int choice)
 				{
 					childrenNode.heuristic = 0;
 				}
+				if(choice == 2)
+				{
+					childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);
+				}
+				if(choice == 3)
+				{
+					childrenNode.manhattan();
+				}
 				cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = 0 is..." << endl;
 				childrenNode.outputVector();
 				goalFound = true;
@@ -266,11 +317,17 @@ void boardLibrary::moveDown(int x, boardLibrary root, int choice)
 				{
 					childrenNode.heuristic = childrenNode.checkMisplace(childrenNode);		//performs misplaced tile operation
 					priorityQ.push(childrenNode);
+					cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = " << childrenNode.heuristic << " is..." << endl;
+					childrenNode.outputVector();
+					cout << endl << "Expanding this node...." << endl;
 				}
 				if(choice == 3)
 				{
 					childrenNode.manhattan();			//performs manhattan calculation 
 					priorityQ.push(childrenNode);
+					cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = " << childrenNode.heuristic << " is..." << endl;
+					childrenNode.outputVector();
+					cout << endl << "Expanding this node...." << endl;
 				}
 			}
 		}
@@ -719,14 +776,18 @@ int main()
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
 			object.outputVector();		//outputting vector
+			start_s=clock();
 			object.uniformSearch(object, userInput);
+			stop_s=clock();
 		}
 		if(userInput == 2)
 		{
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
 			object.outputVector();		//outputting vector
+			start_s=clock();
 			object.misplaced(object, userInput);
+			stop_s=clock();
 			userInput = 0;
 		}
 		if(userInput == 3)
@@ -734,7 +795,9 @@ int main()
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
 			object.outputVector();		//outputting vector
+			start_s=clock();
 			object.ManhattanDistanceSearch(object, userInput);
+			stop_s=clock();
 			userInput = 0;
 		}
 	}
@@ -769,21 +832,52 @@ int main()
 			cout << endl;
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
+			object.outputVector();		//outputting vector
+			start_s=clock();
 			object.uniformSearch(object, userInput);
+			stop_s=clock();
 		}
 		if(userInput == 2)
 		{
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
+			object.outputVector();		//outputting vector
+			start_s=clock();
 			object.misplaced(object, userInput);
+			stop_s=clock();
+			userInput = 0;
 		}
 		if(userInput == 3)
 		{
 			boardLibrary object;
 			object.duplicateBoard(object.parent, puzzle);
+			object.outputVector();		//outputting vector
+			start_s=clock();
 			object.ManhattanDistanceSearch(object, userInput);
+			stop_s=clock();
+			userInput = 0;
 		}
+		// if(userInput == 1)
+		// {
+		// 	cout << endl;
+		// 	boardLibrary object;
+		// 	object.duplicateBoard(object.parent, puzzle);
+		// 	object.uniformSearch(object, userInput);
+		// }
+		// if(userInput == 2)
+		// {
+		// 	boardLibrary object;
+		// 	object.duplicateBoard(object.parent, puzzle);
+		// 	object.misplaced(object, userInput);
+		// }
+		// if(userInput == 3)
+		// {
+		// 	boardLibrary object;
+		// 	object.duplicateBoard(object.parent, puzzle);
+		// 	object.ManhattanDistanceSearch(object, userInput);
+		// }
 		
 	}
+	cout << "time: " << (stop_s-start_s)/double(CLOCKS_PER_SEC)*1000 << endl;
 
 }
