@@ -96,6 +96,7 @@ void boardLibrary::moveRight(int x, boardLibrary root, int choice)
 					childrenNode.heuristic = 0;
 				}
 				cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = 0 is..." << endl;
+				childrenNode.outputVector();
 				goalFound = true;
 				traceback.push(childrenNode);
 				pathtrace(childrenNode, choice);
@@ -145,6 +146,7 @@ void boardLibrary::moveLeft(int x, boardLibrary root, int choice)
 					childrenNode.heuristic = 0;
 				}
 				cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = 0 is..." << endl;
+				childrenNode.outputVector();
 				goalFound = true;
 				traceback.push(childrenNode);
 				pathtrace(childrenNode, choice);
@@ -194,6 +196,7 @@ void boardLibrary::moveUp(int x, boardLibrary root, int choice)
 					childrenNode.heuristic = 0;
 				}
 				cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = 0 is..." << endl;
+				childrenNode.outputVector();
 				goalFound = true;
 				traceback.push(childrenNode);
 				pathtrace(childrenNode, choice);
@@ -243,6 +246,7 @@ void boardLibrary::moveDown(int x, boardLibrary root, int choice)
 					childrenNode.heuristic = 0;
 				}
 				cout << "The best way to expand with a g(n) = " << childrenDepth << " and h(n) = 0 is..." << endl;
+				childrenNode.outputVector();
 				goalFound = true;
 				traceback.push(childrenNode);
 				pathtrace(childrenNode, choice);
